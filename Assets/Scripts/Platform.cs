@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour
 {
-    Animator animator;
+    private Animator animator;
+    public MeshCollider[] meshColliders;
+    private AudioSource audioSource;
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
+
     private void Update()
     {
         float platformPos = transform.position.y;
@@ -17,14 +21,23 @@ public class Platform : MonoBehaviour
         if (distance < -0.1f)
         {
             animator.SetBool("isDestroyed", true);
-            StartCoroutine(Wait(0.7f));
+            audioSource.Play();
+            ColliderOff();
         }
     }
-    IEnumerator Wait(float wait)
+
+    public void DestroyPlatform()
     {
-        yield return new WaitForSeconds(wait);
         Ball.singleton.score++;
         Destroy(gameObject);
+    }
+
+    public void ColliderOff()
+    {
+        for (int i = 0; i < meshColliders.Length; i++)
+        {
+            meshColliders[i].enabled = false;
+        }
     }
 }
 

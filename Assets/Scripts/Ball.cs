@@ -12,29 +12,39 @@ public class Ball : MonoBehaviour
     public int score;
     public TextMeshProUGUI scoreText;
     public bool isEnded;
-    Rigidbody rb;
+    Rigidbody ballRigidBody;
     public GameObject gameOverPanel;
     public GameObject winPanel;
+
+    private AudioSource audioSource;
+    private SoundManager soundManager;
+    public AudioClip audioLostGame;
+    public AudioClip audioWin;
     public enum BallState
     {
         FALL,
         JUMP
     }
+
     private void Awake()
     {
         singleton = this;
-        rb = GetComponent<Rigidbody>();
-    }
-    void Start()
-    {
-        ballState = BallState.JUMP;
+        ballRigidBody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
 
-    void Update()
+    private void Start()
     {
-        if (rb.velocity.magnitude >= 11f)
+        ballState = BallState.JUMP;
+        soundManager = FindObjectOfType<SoundManager>();
+    }
+
+    private void Update()
+    {
+        print(ballRigidBody.velocity.magnitude);
+        if (ballRigidBody.velocity.magnitude > maxSpeed)
         {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
+            ballRigidBody.velocity = ballRigidBody.velocity.normalized * maxSpeed;
         }
         scoreText.text = score.ToString();
         PauseGame();
@@ -42,19 +52,22 @@ public class Ball : MonoBehaviour
     
     private void OnCollisionEnter(Collision collision)
     {
+        audioSource.Play();
         if (collision.gameObject.CompareTag("endgame"))
         {
+            soundManager.PlaySound(audioLostGame);
             gameOverPanel.SetActive(true);
             isEnded = true;
-            
         }
         else if (collision.gameObject.CompareTag("win"))
         {
+            soundManager.PlaySound(audioWin);
             winPanel.SetActive(true);
             isEnded = true;
         }
     }
-    void PauseGame()
+
+    private void PauseGame()
     {
         if (isEnded)
         {
