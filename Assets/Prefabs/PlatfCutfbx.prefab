@@ -710,6 +710,8 @@ MonoBehaviour:
   - {fileID: 5288464331961354183}
   - {fileID: 7553343969285255927}
   - {fileID: 8190449002788355956}
+  particleDestroy: {fileID: 5688368270652681700, guid: 61a2394d4ad3d4e4597359519942d6a0,
+    type: 3}
 --- !u!82 &8199815189451276101
 AudioSource:
   m_ObjectHideFlags: 0

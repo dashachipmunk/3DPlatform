@@ -30,6 +30,7 @@ public class Platform : MonoBehaviour
     {
         Ball.singleton.score++;
         Destroy(gameObject);
+
     }
 
     public void ColliderOff()
